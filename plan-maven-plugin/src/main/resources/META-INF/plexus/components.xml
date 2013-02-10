@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-set>
+  <components>
+    <component>
+      <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
+      <role-hint>plan</role-hint>
+      <implementation>
+        org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping
+      </implementation>
+      <configuration>
+    <phases>         
+      <package>
+      	cz.sw.maven.plugins:plan-maven-plugin:plan
+      </package>
+      <install>
+        org.apache.maven.plugins:maven-install-plugin:install
+      </install>
+      <deploy>
+        org.apache.maven.plugins:maven-deploy-plugin:deploy
+      </deploy>
+    </phases>
+      </configuration>
+    </component>
+    <component>
+      <role>org.apache.maven.artifact.handler.ArtifactHandler</role>
+      <role-hint>plan</role-hint>
+      <implementation>
+        org.apache.maven.artifact.handler.DefaultArtifactHandler
+      </implementation>
+      <configuration>
+        <!--the extension used by Maven in the repository-->
+        <extension>plan</extension>
+        <!--the type used when specifying dependencies etc.-->
+        <type>plan</type>
+        <!--the packaging used when declaring an implementation of 
+          the packaging-->
+        <packaging>plan</packaging>
+      </configuration>
+    </component>
+  </components>
+</component-set>
