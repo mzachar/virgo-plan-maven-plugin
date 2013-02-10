@@ -3,16 +3,37 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cz.sw.maven.plugins</groupId>
 	<artifactId>plan-maven-plugin</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
+	<packaging>maven-plugin</packaging>
+	
 	<name>Virgo Plan Maven Plugin</name>
 	<description>Generates virgo plan.xml file</description>
-
-	<packaging>maven-plugin</packaging>
+	<url>http://github.com/mzachar/plan-maven-plugin</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mvn.version>2.2.0</mvn.version>
 	</properties>
+	
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<url>http://github.com/mzachar/plan-maven-plugin</url>
+		<connection>git://github.com/mzachar/plan-maven-plugin.git</connection>
+	</scm>
+	
+	<developers>
+		<developer>
+			<id>mzachar</id>
+			<name>Matej Zachar</name>
+		</developer>
+	</developers>
 
 	<dependencies>
 		<dependency>
@@ -30,7 +51,7 @@
 			<artifactId>maven-project</artifactId>
 			<version>${mvn.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>xom</groupId>
 			<artifactId>xom</artifactId>
