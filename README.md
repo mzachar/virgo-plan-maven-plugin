@@ -1,4 +1,4 @@
-plan-maven-plugin
+virgo-plan-maven-plugin
 =================
 
 Maven plugin which generates Virgo plan XML based on the project direct dependencies (transient dependencies are ignored).
@@ -16,7 +16,7 @@ Use "plan" project packaging
 		<plugins>
 	    	<plugin>
 	        	<groupId>cz.sw.maven.plugins</groupId>
-				<artifactId>plan-maven-plugin</artifactId>
+				<artifactId>virgo-plan-maven-plugin</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 				<extensions>true</extensions>
 				<configuration>
