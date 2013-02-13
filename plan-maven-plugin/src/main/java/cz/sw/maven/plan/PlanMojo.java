@@ -16,6 +16,9 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
@@ -26,39 +29,37 @@ import org.codehaus.plexus.util.IOUtil;
  * 
 * @author matej zachar
 * 
- * @goal plan
- * @phase package
  */
+@Mojo(name="plan", defaultPhase=LifecyclePhase.PACKAGE)
 public class PlanMojo extends AbstractMojo {
 
     private static final String NAMESPACE_URI = "http://www.springsource.org/schema/dm-server/plan";
 
-    /**
-     * @parameter expression="${project}" readonly=true required=true
-     */
+    @Parameter(defaultValue="${project}", readonly=true, required=true)
     private MavenProject project;
 
     /**
-     * @parameter
+     * Scoped attribute of generated plan
      */
+    @Parameter
     private boolean scoped = false;
 
     /**
-     * @parameter
+     * Atomic attribute of generated plan
      */
+    @Parameter
     private boolean atomic = false;
     
     /**
      * Directory which is searched for *.properties files which will be included in the plan.xml.
      * Default it is <code>${basedir}/conf</code>
-     * 
-     * @parameter expression="${basedir}/conf"
      */
+    @Parameter(defaultValue="${basedir}/conf")
     private File configurationDir;
     
 
     @Override
-    @SuppressWarnings({ "unchecked", "resource" })
+    @SuppressWarnings({ "unchecked" })
     public void execute() throws MojoExecutionException, MojoFailureException {
         Set<Artifact> dependencies = project.getDependencyArtifacts();
         
@@ -78,8 +79,9 @@ public class PlanMojo extends AbstractMojo {
             serializer.setIndent(4);
             serializer.write(plan);
         } catch (IOException e) {
-            e.printStackTrace();
-            
+        	getLog().error("Unable to generate plan", e);
+        	throw new MojoFailureException("Unalbe to generate plan", e);
+        	
         } finally {
             IOUtil.close(out);
         }
@@ -110,7 +112,6 @@ public class PlanMojo extends AbstractMojo {
         
         if (configurationDir != null && configurationDir.exists()) {
             try {
-                @SuppressWarnings("unchecked")
                 List<String> configurations = FileUtils.getFileNames(configurationDir, "*.properties", "", false);
                 if (configurations != null) {
                     for (String configFileName : configurations) {

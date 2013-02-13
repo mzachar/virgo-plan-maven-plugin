@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>plan-maven-plugin</name>
+	<name>cz.sw.maven.plugins.virgo.plan</name>
 	<comment></comment>
 	<projects>
 	</projects>

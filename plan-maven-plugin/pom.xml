@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cz.sw.maven.plugins</groupId>
-	<artifactId>plan-maven-plugin</artifactId>
+	<artifactId>virgo-plan-maven-plugin</artifactId>
 	<version>0.0.1</version>
 	<packaging>maven-plugin</packaging>
 	
@@ -24,8 +24,8 @@
 	</licenses>
 
 	<scm>
-		<url>http://github.com/mzachar/plan-maven-plugin</url>
-		<connection>git://github.com/mzachar/plan-maven-plugin.git</connection>
+		<url>http://github.com/mzachar/virgo-plan-maven-plugin</url>
+		<connection>git://github.com/mzachar/virgo-plan-maven-plugin.git</connection>
 	</scm>
 	
 	<developers>
@@ -51,6 +51,18 @@
 			<artifactId>maven-project</artifactId>
 			<version>${mvn.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.plugin-tools</groupId>
+			<artifactId>maven-plugin-annotations</artifactId>
+			<version>3.2</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.plexus</groupId>
+			<artifactId>plexus-utils</artifactId>
+			<version>3.0.8</version>
+		</dependency>
+		
 
 		<dependency>
 			<groupId>xom</groupId>
@@ -69,6 +81,29 @@
 					<source>1.6</source>
 					<target>1.6</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+				<version>3.2</version>
+				<configuration>
+					<goalPrefix>virgo-plan</goalPrefix>
+					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+				</configuration>
+				<executions>
+					<execution>
+						<id>mojo-descriptor</id>
+						<goals>
+							<goal>descriptor</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>help-goal</id>
+						<goals>
+							<goal>helpmojo</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
