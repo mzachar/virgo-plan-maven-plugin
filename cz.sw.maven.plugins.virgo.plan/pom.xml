@@ -5,7 +5,7 @@
 	<artifactId>virgo-plan-maven-plugin</artifactId>
 	<version>0.0.1</version>
 	<packaging>maven-plugin</packaging>
-	
+
 	<name>Virgo Plan Maven Plugin</name>
 	<description>Generates virgo plan.xml file</description>
 	<url>http://github.com/mzachar/plan-maven-plugin</url>
@@ -14,7 +14,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mvn.version>2.2.0</mvn.version>
 	</properties>
-	
+
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -27,7 +27,7 @@
 		<url>http://github.com/mzachar/virgo-plan-maven-plugin</url>
 		<connection>git://github.com/mzachar/virgo-plan-maven-plugin.git</connection>
 	</scm>
-	
+
 	<developers>
 		<developer>
 			<id>mzachar</id>
@@ -62,8 +62,16 @@
 			<artifactId>plexus-utils</artifactId>
 			<version>3.0.8</version>
 		</dependency>
-		
-
+		<dependency>
+			<groupId>com.springsource.util</groupId>
+			<artifactId>com.springsource.util.osgi</artifactId>
+			<version>2.0.5.RELEASE</version>
+		</dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>4.3.1</version>
+        </dependency>		
 		<dependency>
 			<groupId>xom</groupId>
 			<artifactId>xom</artifactId>
