@@ -1,8 +1,6 @@
 package cz.sw.maven.plan;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,10 +8,8 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.util.List;
 import java.util.Set;
-import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.jar.Manifest;
 
 import nu.xom.Attribute;
 import nu.xom.Document;
@@ -21,8 +17,6 @@ import nu.xom.Element;
 import nu.xom.Serializer;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
-import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -36,7 +30,6 @@ import org.codehaus.plexus.util.IOUtil;
 
 import com.springsource.util.osgi.manifest.BundleManifest;
 import com.springsource.util.osgi.manifest.BundleManifestFactory;
-import com.springsource.util.osgi.manifest.parse.ParserLogger;
 
 /**
  * A Maven {@link Mojo} for creating a plan XML based on the first class dependency members. No transitive dependencies are included in the plan XML.
@@ -47,7 +40,7 @@ import com.springsource.util.osgi.manifest.parse.ParserLogger;
 @Mojo(name = "plan", defaultPhase = LifecyclePhase.PACKAGE)
 public class PlanMojo extends AbstractMojo {
 
-    private static final String NAMESPACE_URI = "http://www.springsource.org/schema/dm-server/plan";
+    private static final String NAMESPACE_URI = "http://www.eclipse.org/virgo/schema/plan";
 
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     private MavenProject project;
@@ -114,7 +107,7 @@ public class PlanMojo extends AbstractMojo {
     private Document generatePlanXml(Set<Artifact> dependencies) {
         Element plan = new Element("plan", NAMESPACE_URI);
         plan.addAttribute(new Attribute("xsi:schemaLocation", "http://www.w3.org/2001/XMLSchema-instance",
-                "http://www.springsource.org/schema/dm-server/plan http://www.springsource.org/schema/dm-server/plan/springsource-dm-server-plan.xsd"));
+                "http://www.eclipse.org/virgo/schema/plan http://www.eclipse.org/virgo/schema/plan/eclipse-virgo-plan.xsd"));
 
         plan.addAttribute(new Attribute("name", getArtifactName(project.getArtifact(), PlanArtifactType.PLAN)));
         plan.addAttribute(new Attribute("version", project.getVersion()));
