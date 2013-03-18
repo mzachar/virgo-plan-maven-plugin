@@ -184,33 +184,42 @@ public class PlanMojo extends AbstractMojo {
         if (type != PlanArtifactType.BUNDLE)
             return null;
 
+        Reader manifestReader = null;
+
+        JarFile jar = null;
+
         try {
 
             artifactResolver.resolve(artifact, remoteRepos, local);
             if (artifact.getFile() == null)
                 return null;
 
-            final JarFile jar = new JarFile(artifact.getFile());
+            jar = new JarFile(artifact.getFile());
 
             final JarEntry manifestEntry = jar.getJarEntry(JarFile.MANIFEST_NAME);
 
-            final Reader manifestReader = new InputStreamReader(jar.getInputStream(manifestEntry));
+            manifestReader = new InputStreamReader(jar.getInputStream(manifestEntry));
 
             final BundleManifest manifest = BundleManifestFactory.createBundleManifest(manifestReader);
-            
-            manifestReader.close();
-            jar.close();
 
             final String symbolicName = manifest.getBundleSymbolicName().getSymbolicName();
             final String bundleVersion = manifest.getBundleVersion().toString();
-            
-            
+
             return createPlanXmlArtifact(type, symbolicName, bundleVersion);
         } catch (Exception e) {
-            //FIXME proper log handling
-            System.out.println("Error reading artifact: " + artifact.getArtifactId());
+            // FIXME proper log handling
             e.printStackTrace();
             return null;
+        } finally {
+            IOUtil.close(manifestReader);
+
+            if (jar != null)
+                try {
+                    jar.close();
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+                }
         }
     }
 
