@@ -27,6 +27,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.StringUtils;
 
 import com.springsource.util.osgi.manifest.BundleManifest;
 import com.springsource.util.osgi.manifest.BundleManifestFactory;
@@ -56,6 +57,12 @@ public class PlanMojo extends AbstractMojo {
      */
     @Parameter
     private boolean atomic = false;
+
+    /**
+     * Version number of generated plan. Can be used to override the existing version number with a correct OSGi-fied version.
+     */
+    @Parameter
+    private String version;
 
     /**
      * Directory which is searched for *.properties files which will be included in the plan.xml. Default it is <code>${basedir}/conf</code>
@@ -109,8 +116,15 @@ public class PlanMojo extends AbstractMojo {
         plan.addAttribute(new Attribute("xsi:schemaLocation", "http://www.w3.org/2001/XMLSchema-instance",
                 "http://www.eclipse.org/virgo/schema/plan http://www.eclipse.org/virgo/schema/plan/eclipse-virgo-plan.xsd"));
 
+        final String planVersion;
+
+        if (StringUtils.isNotBlank(version))
+            planVersion = version;
+        else
+            planVersion = project.getVersion();
+
         plan.addAttribute(new Attribute("name", getArtifactName(project.getArtifact(), PlanArtifactType.PLAN)));
-        plan.addAttribute(new Attribute("version", project.getVersion()));
+        plan.addAttribute(new Attribute("version", planVersion));
         plan.addAttribute(new Attribute("scoped", scoped ? "true" : "false"));
         plan.addAttribute(new Attribute("atomic", atomic ? "true" : "false"));
 
