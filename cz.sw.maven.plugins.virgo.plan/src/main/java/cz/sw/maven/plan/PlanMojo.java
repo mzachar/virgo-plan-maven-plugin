@@ -1,3 +1,18 @@
+/*
+ * Copyright 2013 Matej Zachar
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package cz.sw.maven.plan;
 
 import java.io.File;
@@ -17,6 +32,8 @@ import nu.xom.Element;
 import nu.xom.Serializer;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -71,13 +88,13 @@ public class PlanMojo extends AbstractMojo {
     private File configurationDir;
 
     @Parameter(defaultValue = "${localRepository}")
-    private org.apache.maven.artifact.repository.ArtifactRepository local;
+    private ArtifactRepository local;
 
     @Component
-    private org.apache.maven.artifact.resolver.ArtifactResolver artifactResolver;
-
+    private ArtifactResolver artifactResolver;
+    
     @Parameter(defaultValue = "${project.remoteArtifactRepositories}")
-    protected List remoteRepos;
+    protected List<ArtifactRepository> remoteRepos;
 
     @Override
     @SuppressWarnings({ "unchecked" })
@@ -99,6 +116,8 @@ public class PlanMojo extends AbstractMojo {
             Serializer serializer = new Serializer(out, "UTF-8");
             serializer.setIndent(4);
             serializer.write(plan);
+            
+            project.getArtifact().setFile(planFile);
         } catch (IOException e) {
             getLog().error("Unable to generate plan", e);
             throw new MojoFailureException("Unalbe to generate plan", e);
@@ -175,17 +194,16 @@ public class PlanMojo extends AbstractMojo {
         if (type == null)
             return null;
 
-        String version = dependenci.getVersion();
-
-        if (dependenci.getVersionRange() != null) {
-            version = dependenci.getVersionRange().toString();
-        }
-
+        // try osgi manifest symbolic name and version
         Element bundleArtifact = createBundleArtifact(dependenci, type);
-
         if (bundleArtifact != null)
             return bundleArtifact;
 
+        // fall back to maven groupId.artifactId and version
+        String version = dependenci.getVersion();
+        if (dependenci.getVersionRange() != null) {
+        	version = dependenci.getVersionRange().toString();
+        }
         return createPlanXmlArtifact(type, getArtifactName(dependenci, type), version);
     }
 
@@ -199,11 +217,9 @@ public class PlanMojo extends AbstractMojo {
             return null;
 
         Reader manifestReader = null;
-
         JarFile jar = null;
 
         try {
-
             artifactResolver.resolve(artifact, remoteRepos, local);
             if (artifact.getFile() == null)
                 return null;
@@ -221,9 +237,10 @@ public class PlanMojo extends AbstractMojo {
 
             return createPlanXmlArtifact(type, symbolicName, bundleVersion);
         } catch (Exception e) {
-            // FIXME proper log handling
-            e.printStackTrace();
+        	getLog().info("Unable to reslove artifact["+artifact+"] symbolicName and version. Fallbacking to maven groupId, artifactId and version");
+        	getLog().debug(e);
             return null;
+            
         } finally {
             IOUtil.close(manifestReader);
 
@@ -231,8 +248,7 @@ public class PlanMojo extends AbstractMojo {
                 try {
                     jar.close();
                 } catch (IOException e) {
-
-                    e.printStackTrace();
+                	getLog().warn("Unable to close jar file", e);
                 }
         }
     }
