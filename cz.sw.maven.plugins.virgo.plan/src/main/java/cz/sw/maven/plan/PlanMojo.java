@@ -55,7 +55,7 @@ import com.springsource.util.osgi.manifest.BundleManifestFactory;
  * @author matej zachar
  * 
  */
-@Mojo(name = "plan", defaultPhase = LifecyclePhase.PACKAGE)
+@Mojo(name = "plan", defaultPhase = LifecyclePhase.PACKAGE, threadSafe = true)
 public class PlanMojo extends AbstractMojo {
 
     private static final String NAMESPACE_URI = "http://www.eclipse.org/virgo/schema/plan";
