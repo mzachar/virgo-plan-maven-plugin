@@ -46,8 +46,8 @@ import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
-import com.springsource.util.osgi.manifest.BundleManifest;
-import com.springsource.util.osgi.manifest.BundleManifestFactory;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
 
 /**
  * A Maven {@link Mojo} for creating a plan XML based on the first class dependency members. No transitive dependencies are included in the plan XML.
@@ -90,6 +90,9 @@ public class PlanMojo extends AbstractMojo {
     @Parameter(defaultValue = "${localRepository}")
     private ArtifactRepository local;
 
+    @Parameter
+    private String planName;
+
     @Component
     private ArtifactResolver artifactResolver;
     
@@ -105,7 +108,11 @@ public class PlanMojo extends AbstractMojo {
 
         OutputStream out = null;
         try {
-            File planFile = new File(project.getBuild().getDirectory(), getArtifactName(project.getArtifact(), PlanArtifactType.PLAN));
+            String artifactName = planName;
+            if (planName == null) {
+                artifactName = getArtifactName(project.getArtifact(), PlanArtifactType.PLAN);
+            }
+            File planFile = new File(project.getBuild().getDirectory(), artifactName );
             if (planFile.exists() == false) {
                 planFile.getParentFile().mkdir();
                 planFile.createNewFile();
@@ -147,16 +154,6 @@ public class PlanMojo extends AbstractMojo {
         plan.addAttribute(new Attribute("scoped", scoped ? "true" : "false"));
         plan.addAttribute(new Attribute("atomic", atomic ? "true" : "false"));
 
-        for (Artifact dep : dependencies) {
-
-            if (Artifact.SCOPE_COMPILE.equals(dep.getScope()) == false)
-                continue;
-
-            Element artifact = createPlanXmlArtifact(dep);
-            if (artifact != null) {
-                plan.appendChild(artifact);
-            }
-        }
 
         if (configurationDir != null && configurationDir.exists()) {
             try {
@@ -170,6 +167,17 @@ public class PlanMojo extends AbstractMojo {
                 }
             } catch (IOException e) {
                 throw new RuntimeException("Unable to generate configuration plan entries", e);
+            }
+        }
+
+        for (Artifact dep : dependencies) {
+
+            if (Artifact.SCOPE_COMPILE.equals(dep.getScope()) == false)
+                continue;
+
+            Element artifact = createPlanXmlArtifact(dep);
+            if (artifact != null) {
+                plan.appendChild(artifact);
             }
         }
 
