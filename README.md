@@ -17,7 +17,7 @@ Use "plan" project packaging
 	    	<plugin>
 	        	<groupId>com.github.mzachar.maven.plugins</groupId>
 				<artifactId>virgo-plan-maven-plugin</artifactId>
-				<version>0.0.2-SNAPSHOT</version>
+				<version>0.0.2</version>
 				<extensions>true</extensions>
 				<configuration>
 					<atomic>true</atomic>
