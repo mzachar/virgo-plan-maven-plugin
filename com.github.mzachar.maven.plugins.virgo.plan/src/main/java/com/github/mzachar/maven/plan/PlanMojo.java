@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cz.sw.maven.plan;
+package com.github.mzachar.maven.plan;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,7 +52,7 @@ import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
 /**
  * A Maven {@link Mojo} for creating a plan XML based on the first class dependency members. No transitive dependencies are included in the plan XML.
  * 
- * @author matej zachar
+ * @author Matej Zachar
  * 
  */
 @Mojo(name = "plan", defaultPhase = LifecyclePhase.PACKAGE, threadSafe = true)
@@ -82,6 +82,12 @@ public class PlanMojo extends AbstractMojo {
     private String version;
 
     /**
+     * Name of generated plan. Can be used to override default plan name (groupId.artifactId.plan)
+     */
+    @Parameter
+    private String planName;
+    
+    /**
      * Directory which is searched for *.properties files which will be included in the plan.xml. Default it is <code>${basedir}/conf</code>
      */
     @Parameter(defaultValue = "${basedir}/conf")
@@ -89,9 +95,6 @@ public class PlanMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${localRepository}")
     private ArtifactRepository local;
-
-    @Parameter
-    private String planName;
 
     @Component
     private ArtifactResolver artifactResolver;
@@ -109,10 +112,10 @@ public class PlanMojo extends AbstractMojo {
         OutputStream out = null;
         try {
             String artifactName = planName;
-            if (planName == null) {
+            if (artifactName == null) {
                 artifactName = getArtifactName(project.getArtifact(), PlanArtifactType.PLAN);
             }
-            File planFile = new File(project.getBuild().getDirectory(), artifactName );
+            File planFile = new File(project.getBuild().getDirectory(), artifactName);
             if (planFile.exists() == false) {
                 planFile.getParentFile().mkdir();
                 planFile.createNewFile();

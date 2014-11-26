@@ -10,7 +10,7 @@
       <configuration>
     <phases>         
       <package>
-      	cz.sw.maven.plugins:virgo-plan-maven-plugin:plan
+      	com.github.mzachar.maven.plugins:virgo-plan-maven-plugin:plan
       </package>
       <install>
         org.apache.maven.plugins:maven-install-plugin:install

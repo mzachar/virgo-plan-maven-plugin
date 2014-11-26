@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>cz.sw.maven.plugins</groupId>
+	<groupId>com.github.mzachar.maven.plugins</groupId>
 	<artifactId>virgo-plan-maven-plugin</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>Virgo Plan Maven Plugin</name>
@@ -23,17 +23,30 @@
 		</license>
 	</licenses>
 
-	<scm>
-		<url>http://github.com/mzachar/virgo-plan-maven-plugin</url>
-		<connection>git://github.com/mzachar/virgo-plan-maven-plugin.git</connection>
-	</scm>
-
 	<developers>
 		<developer>
 			<id>mzachar</id>
 			<name>Matej Zachar</name>
 		</developer>
 	</developers>
+
+	<issueManagement>
+		<system>Github</system>
+		<url>https://github.com/mzachar/virgo-plan-maven-plugin/issues</url>
+	</issueManagement>
+
+	<scm>
+		<url>http://github.com/mzachar/virgo-plan-maven-plugin</url>
+		<connection>scm:git:https://github.com/mzachar/virgo-plan-maven-plugin.git</connection>
+		<developerConnection>scm:git:https://github.com/mzachar/virgo-plan-maven-plugin.git</developerConnection>
+	</scm>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<dependencies>
 		<dependency>
@@ -62,16 +75,16 @@
 			<artifactId>plexus-utils</artifactId>
 			<version>3.0.8</version>
 		</dependency>
-        <dependency>
-	        <groupId>org.eclipse.virgo.util</groupId>
-	        <artifactId>org.eclipse.virgo.util.osgi.manifest</artifactId>
-	        <version>3.5.0.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
-            <version>4.3.1</version>
-        </dependency>		
+		<dependency>
+			<groupId>org.eclipse.virgo.util</groupId>
+			<artifactId>org.eclipse.virgo.util.osgi.manifest</artifactId>
+			<version>3.5.0.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.core</artifactId>
+			<version>4.3.1</version>
+		</dependency>
 		<dependency>
 			<groupId>xom</groupId>
 			<artifactId>xom</artifactId>
@@ -89,6 +102,32 @@
 					<source>1.6</source>
 					<target>1.6</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -113,7 +152,42 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.5</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>false</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.1</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
