@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.mzachar.maven.plugins</groupId>
 	<artifactId>virgo-plan-maven-plugin</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>Virgo Plan Maven Plugin</name>
 	<description>Generates virgo plan.xml file</description>
-	<url>http://github.com/mzachar/plan-maven-plugin</url>
+	<url>http://github.com/mzachar/virgo-plan-maven-plugin</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -160,7 +160,7 @@
 				<configuration>
 					<serverId>ossrh</serverId>
 					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+					<autoReleaseAfterClose>false</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
 		</plugins>
