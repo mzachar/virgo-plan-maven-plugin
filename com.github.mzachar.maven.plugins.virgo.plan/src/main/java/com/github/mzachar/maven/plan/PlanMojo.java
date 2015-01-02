@@ -192,6 +192,9 @@ public class PlanMojo extends AbstractMojo {
         if ("jar".equalsIgnoreCase(dependenci.getType())) {
             type = PlanArtifactType.BUNDLE;
         }
+        if ("war".equalsIgnoreCase(dependenci.getType())) {
+            type = PlanArtifactType.BUNDLE;
+        }
 
         if ("par".equalsIgnoreCase(dependenci.getType())) {
             type = PlanArtifactType.PAR;
